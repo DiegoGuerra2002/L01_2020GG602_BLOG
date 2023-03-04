@@ -81,5 +81,18 @@ namespace L01_2020GG602.Controllers
             _blogContext.SaveChanges();
             return Ok(usuarios);
         }
+        [HttpGet]
+        [Route("Find/{filtro}")]
+        public IActionResult FindByNombreEquipo(string filtro)
+        {
+            usuarios? usuarios = (from e in _equiposContexto.equipos
+                               where e.descripcion.Contains(filtro)
+                               select e).FirstOrDefault();
+            if (equipo == null)
+            {
+                return NotFound();
+            }
+            return Ok(equipo);
+        }
     }
 }
