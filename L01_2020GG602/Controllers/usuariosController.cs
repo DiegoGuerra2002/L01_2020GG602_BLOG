@@ -29,5 +29,57 @@ namespace L01_2020GG602.Controllers
 
             return Ok(listado);
         }
+        [HttpPost]
+        [Route("Add")]
+        public ActionResult GuardarUsuarios([FromBody] usuarios user)
+        {
+            try
+            {
+                _blogContext.usuarios.Add(user);
+                _blogContext.SaveChanges();
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut]
+        [Route("actualizar/{id}")]
+        public IActionResult ActualizarUsuarios(int id, [FromBody] usuarios userModificar)
+        {
+            usuarios? userActual = (from e in _blogContext.usuarios
+                                         where e.usuarioId == id
+                                         select e).FirstOrDefault();
+
+            if (userActual == null)
+            {
+                return NotFound();
+            }
+
+            userActual.nombreUsuario = userModificar.nombreUsuario;
+
+            _blogContext.Entry(userActual).State = EntityState.Modified;
+            _blogContext.SaveChanges();
+            return Ok(userModificar);
+
+
+        }
+
+        [HttpDelete]
+        [Route("eliminar/{id}")]
+        public IActionResult EliminarUsuarios(int id)
+        {
+            usuarios? usuarios = (from e in _blogContext.usuarios
+                                              where e.usuarioId == id
+                                              select e).FirstOrDefault();
+            if (usuarios == null) { return NotFound(); }
+
+            _blogContext.usuarios.Attach(usuarios);
+            _blogContext.usuarios.Remove(usuarios);
+            _blogContext.SaveChanges();
+            return Ok(usuarios);
+        }
     }
 }

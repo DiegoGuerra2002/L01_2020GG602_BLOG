@@ -29,5 +29,57 @@ namespace L01_2020GG602.Controllers
 
             return Ok(listado);
         }
+        [HttpPost]
+        [Route("Add")]
+        public ActionResult GuardarComentarios([FromBody] comentarios com)
+        {
+            try
+            {
+                _blogContext.comentarios.Add(com);
+                _blogContext.SaveChanges();
+                return Ok(com);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut]
+        [Route("actualizar/{id}")]
+        public IActionResult ActualizarComentarios(int id, [FromBody] comentarios comModificar)
+        {
+            comentarios? comActual = (from e in _blogContext.comentarios
+                                         where e.cometarioId == id
+                                         select e).FirstOrDefault();
+
+            if (comActual == null)
+            {
+                return NotFound();
+            }
+
+            comActual.comentario = comActual.comentario;
+
+            _blogContext.Entry(comActual).State = EntityState.Modified;
+            _blogContext.SaveChanges();
+            return Ok(comModificar);
+
+
+        }
+
+        [HttpDelete]
+        [Route("eliminar/{id}")]
+        public IActionResult EliminarComentarios(int id)
+        {
+            comentarios? comentarios = (from e in _blogContext.comentarios
+                                              where e.cometarioId == id
+                                              select e).FirstOrDefault();
+            if (comentarios == null) { return NotFound(); }
+
+            _blogContext.comentarios.Attach(comentarios);
+            _blogContext.comentarios.Remove(comentarios);
+            _blogContext.SaveChanges();
+            return Ok(comentarios);
+        }
     }
 }
