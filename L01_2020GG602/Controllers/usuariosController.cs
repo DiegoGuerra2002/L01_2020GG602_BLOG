@@ -82,17 +82,30 @@ namespace L01_2020GG602.Controllers
             return Ok(usuarios);
         }
         [HttpGet]
-        [Route("Find/{filtro}")]
-        public IActionResult FindByNombreEquipo(string filtro)
+        [Route("Find/{nombre}/{apellido}")]
+        public IActionResult FindByNombre(string nombre, string apellido)
         {
-            usuarios? usuarios = (from e in _equiposContexto.equipos
-                               where e.descripcion.Contains(filtro)
+            usuarios? usuarios = (from e in _blogContext.usuarios
+                               where e.nombreUsuario.Contains(nombre) && e.apellido.Contains(apellido)
                                select e).FirstOrDefault();
-            if (equipo == null)
+            if (usuarios == null)
             {
                 return NotFound();
             }
-            return Ok(equipo);
+            return Ok(usuarios);
+        }
+        [HttpGet]
+        [Route("Find/{Rol}")]
+        public IActionResult FindByRol(int Rol)
+        {
+            usuarios? usuarios = (from e in _blogContext.usuarios
+                                  where e.rolId==(Rol)
+                                  select e).FirstOrDefault();
+            if (usuarios == null)
+            {
+                return NotFound();
+            }
+            return Ok(usuarios);
         }
     }
 }

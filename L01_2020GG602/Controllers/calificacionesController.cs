@@ -81,5 +81,18 @@ namespace L01_2020GG602.Controllers
             _blogContext.SaveChanges();
             return Ok(calificaciones);
         }
+        [HttpGet]
+        [Route("Find/{publicacion}")]
+        public IActionResult FindByPubli(int publicacion)
+        {
+            calificaciones? calificaciones = (from e in _blogContext.calificaciones
+                                  where e.publicacionId==(publicacion)
+                                  select e).FirstOrDefault();
+            if (calificaciones == null)
+            {
+                return NotFound();
+            }
+            return Ok(calificaciones);
+        }
     }
 }

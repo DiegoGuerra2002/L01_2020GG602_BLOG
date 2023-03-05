@@ -81,5 +81,18 @@ namespace L01_2020GG602.Controllers
             _blogContext.SaveChanges();
             return Ok(comentarios);
         }
+        [HttpGet]
+        [Route("Find/{Usuario}")]
+        public IActionResult FindByUsuario(int Usuario)
+        {
+            comentarios? comentarios = (from e in _blogContext.comentarios
+                                  where e.usuarioId==(Usuario)
+                                  select e).FirstOrDefault();
+            if (comentarios == null)
+            {
+                return NotFound();
+            }
+            return Ok(comentarios);
+        }
     }
 }
